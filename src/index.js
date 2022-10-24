@@ -6,11 +6,13 @@ discord.js V14 : npm i discord.js
 slash cmd builders : npm i @discordjs/builders
 */
 
-import { Client, GatewayIntentBits, Routes } from 'discord.js';
+import { ActionRowBuilder, Client, GatewayIntentBits, Routes, SelectMenuBuilder, TextInputBuilder, TextInputComponent, TextInputStyle } from 'discord.js';
 import { config } from 'dotenv';
 import { REST } from '@discordjs/rest';
 import OrderCommand from './commands/orderCake.js';
 import RolesCMD from './commands/roles.js';
+import reportCMD from './commands/report.js';
+import { ModalBuilder } from '@discordjs/builders';
 
 config();
 
@@ -27,8 +29,36 @@ client.once("ready", () => {
 
 client.on('interactionCreate', (interaction) => {
     if(interaction.isChatInputCommand()){
-        console.log("Hello, world!");
-        interaction.reply({ content: interaction.options.get('echo').value });
+        if(interaction.commandName === 'cakes'){
+            console.log('Order Command');
+            console.log(interaction);
+            const actionRowComponent = new ActionRowBuilder().setComponents(
+                new SelectMenuBuilder()
+                    .setCustomId('cake_opt')
+                    .setOptions(
+                        [
+                            { label: 'Chocolate Cake', value: 'chocolate_cake' },
+                            { label: 'Vanilla Cake', value: 'vanilla_cake' },
+                            { label: 'Lime Cake', value: 'lime_cake' },
+                            { label: 'bubblegum Cake', value: 'bubblegum_cake' },
+                        ])
+            );
+            interaction.reply({
+                components: [actionRowComponent.toJSON()],
+            });
+        }else if (interaction.commandName === 'report'){
+            const modal = new ModalBuilder()
+                .setTitle('Report User Form')
+                .setCustomId('reportForm')
+                .setComponents(
+                    new ActionRowBuilder().setComponents(
+                        new TextInputBuilder().setLabel('Username of user that violated the rule').setCustomId('reportedUsers').setStyle(TextInputStyle.Short))
+                );
+
+            interaction.showModal(modal)
+        }
+    } else if (interaction.isSelectMenu()){
+        interaction.reply({ content: `HI!` });
     }
 });
 
@@ -40,7 +70,7 @@ async function main() {
 
     
 
-    const commands = [OrderCommand];
+    const commands = [OrderCommand, RolesCMD, reportCMD];
     try {
         console.log('Started refreshing application (/) commands.');
         await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {

@@ -5,8 +5,9 @@ const rolesCMD = new SlashCommandBuilder()
     .setDescription('adds a role')
     .addRoleOption((option) =>
         option
-            .setName('New Role')
+            .setName('newrole')
             .setDescription("adds a new role")
+            .setRequired(true)
     );
 
 export default rolesCMD.toJSON();
