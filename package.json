@@ -1,0 +1,24 @@
+{
+  "name": "v14.1",
+  "version": "0.0.1",
+  "description": "Literally a discord bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon ./src/index.js"
+  },
+  "author": "Decstarken / Dec",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/builders": "^1.3.0",
+    "@discordjs/rest": "^1.3.0",
+    "discord.js": "^14.6.0"
+  },
+  "type": "module",
+  "optionalDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3"
+  }
+}
